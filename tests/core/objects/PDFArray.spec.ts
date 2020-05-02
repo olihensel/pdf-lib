@@ -106,6 +106,19 @@ describe(`PDFArray`, () => {
     expect(lookupValues[1]).toEqual(pdfDict2);
   });
 
+  it(`can be converted to an Array`, () => {
+    expect(pdfArray.asArray()).toEqual([
+      pdfBool,
+      pdfHexString,
+      pdfName,
+      pdfNull,
+      pdfNumber,
+      pdfString,
+      pdfSubArray,
+      pdfRef,
+    ]);
+  });
+
   it(`can be cloned`, () => {
     const original = pdfArray;
     const clone = original.clone();

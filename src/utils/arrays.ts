@@ -13,7 +13,7 @@ export const typedArrayFor = (value: string | Uint8Array): Uint8Array => {
   return typedArray;
 };
 
-export const mergeIntoTypedArray = (...arrays: Array<string | Uint8Array>) => {
+export const mergeIntoTypedArray = (...arrays: (string | Uint8Array)[]) => {
   const arrayCount = arrays.length;
 
   const typedArrays: Uint8Array[] = [];
@@ -107,7 +107,9 @@ export const sum = (array: number[] | Uint8Array): number => {
 
 export const range = (start: number, end: number): number[] => {
   const arr = new Array(end - start);
-  for (let idx = start; idx < end; idx++) arr[idx] = idx;
+  for (let idx = 0, len = arr.length; idx < len; idx++) {
+    arr[idx] = start + idx;
+  }
   return arr;
 };
 

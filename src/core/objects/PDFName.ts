@@ -46,6 +46,7 @@ class PDFName extends PDFObject {
   static readonly Page = PDFName.of('Page');
   static readonly Annots = PDFName.of('Annots');
   static readonly TrimBox = PDFName.of('TrimBox');
+  static readonly ArtBox = PDFName.of('ArtBox');
   static readonly BleedBox = PDFName.of('BleedBox');
   static readonly CropBox = PDFName.of('CropBox');
   static readonly Rotate = PDFName.of('Rotate');
@@ -113,6 +114,14 @@ class PDFName extends PDFObject {
   static readonly On = PDFName.of('On');
   static readonly Lock = PDFName.of('Lock');
   static readonly SV = PDFName.of('SV');
+  static readonly Title = PDFName.of('Title');
+  static readonly Author = PDFName.of('Author');
+  static readonly Subject = PDFName.of('Subject');
+  static readonly Creator = PDFName.of('Creator');
+  static readonly Keywords = PDFName.of('Keywords');
+  static readonly Producer = PDFName.of('Producer');
+  static readonly CreationDate = PDFName.of('CreationDate');
+  static readonly ModDate = PDFName.of('ModDate');
   /* tslint:enable member-ordering */
 
   private readonly encodedName: string;
@@ -131,6 +140,11 @@ class PDFName extends PDFObject {
     this.encodedName = encodedName;
   }
 
+  asString(): string {
+    return this.encodedName;
+  }
+
+  /** @deprecated in favor of [[PDFName.asString]] */
   value(): string {
     return this.encodedName;
   }

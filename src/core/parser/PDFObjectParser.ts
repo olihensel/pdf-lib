@@ -140,14 +140,7 @@ class PDFObjectParser extends BaseParser {
     let name = '';
     while (!this.bytes.done()) {
       const byte = this.bytes.peek();
-      if (
-        byte < CharCodes.ExclamationPoint ||
-        byte > CharCodes.Tilde ||
-        IsWhitespace[byte] ||
-        IsDelimiter[byte]
-      ) {
-        break;
-      }
+      if (IsWhitespace[byte] || IsDelimiter[byte]) break;
       name += charFromCode(byte);
       this.bytes.next();
     }
@@ -172,6 +165,7 @@ class PDFObjectParser extends BaseParser {
   protected parseDict(): PDFDict {
     this.bytes.assertNext(CharCodes.LessThan);
     this.bytes.assertNext(CharCodes.LessThan);
+    this.skipWhitespaceAndComments();
 
     const dict: DictMap = new Map();
 
@@ -180,7 +174,6 @@ class PDFObjectParser extends BaseParser {
       this.bytes.peek() !== CharCodes.GreaterThan &&
       this.bytes.peekAhead(1) !== CharCodes.GreaterThan
     ) {
-      this.skipWhitespaceAndComments();
       const key = this.parseName();
       const value = this.parseObject();
       dict.set(key, value);
@@ -226,7 +219,7 @@ class PDFObjectParser extends BaseParser {
 
     const Length = dict.get(PDFName.of('Length'));
     if (Length instanceof PDFNumber) {
-      end = start + Length.value();
+      end = start + Length.asNumber();
       this.bytes.moveTo(end);
       this.skipWhitespaceAndComments();
       if (!this.matchKeyword(Keywords.endstream)) {

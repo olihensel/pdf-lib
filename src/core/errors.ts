@@ -71,6 +71,20 @@ export class PageEmbeddingMismatchedContextError extends Error {
   }
 }
 
+export class PDFArrayIsNotRectangleError extends Error {
+  constructor(size: number) {
+    const msg = `Attempted to convert PDFArray with ${size} elements to rectangle, but must have exactly 4 elements.`;
+    super(msg);
+  }
+}
+
+export class InvalidPDFDateStringError extends Error {
+  constructor(value: string) {
+    const msg = `Attempted to convert "${value}" to a date, but it does not match the PDF date string format.`;
+    super(msg);
+  }
+}
+
 /***** Parser Errors ******/
 
 export interface Position {

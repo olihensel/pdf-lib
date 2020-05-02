@@ -88,3 +88,34 @@ export const breakTextIntoLines = (
 
   return lines;
 };
+
+// See section "7.9.4 Dates" of the PDF specification
+const dateRegex = /^D:(\d\d\d\d)(\d\d)?(\d\d)?(\d\d)?(\d\d)?(\d\d)?([+\-Z])?(\d\d)?'?(\d\d)?'?$/;
+
+export const parseDate = (dateStr: string): Date | undefined => {
+  const match = dateStr.match(dateRegex);
+
+  if (!match) return undefined;
+
+  const [
+    ,
+    year,
+    month = '01',
+    day = '01',
+    hours = '00',
+    mins = '00',
+    secs = '00',
+    offsetSign = 'Z',
+    offsetHours = '00',
+    offsetMins = '00',
+  ] = match;
+
+  // http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
+  const tzOffset =
+    offsetSign === 'Z' ? 'Z' : `${offsetSign}${offsetHours}:${offsetMins}`;
+  const date = new Date(
+    `${year}-${month}-${day}T${hours}:${mins}:${secs}${tzOffset}`,
+  );
+
+  return date;
+};

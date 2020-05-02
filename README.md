@@ -53,6 +53,7 @@
   - [Embed PDF Pages](#embed-pdf-pages)
   - [Embed Font and Measure Text](#embed-font-and-measure-text)
   - [Set Document Metadata](#set-document-metadata)
+  - [Read Document Metadata](#read-document-metadata)
   - [Draw SVG Paths](#draw-svg-paths)
 - [Complete Examples](#complete-examples)
 - [Installation](#installation)
@@ -80,6 +81,7 @@
 - Measure width and height of text
 - Embed Fonts (supports UTF-8 and UTF-16 character sets)
 - Set document metadata
+- Read document metadata
 
 ## Motivation
 
@@ -195,7 +197,7 @@ _This example produces [this PDF](assets/pdfs/examples/copy_pages.pdf)_ (when [t
 import { PDFDocument } from 'pdf-lib'
 
 // Create a new PDFDocument
-const pdfDoc = await PDFDocument.create();
+const pdfDoc = await PDFDocument.create()
 
 // These should be Uint8Arrays or ArrayBuffers
 // This data can be obtained in a number of different ways
@@ -291,7 +293,7 @@ const pdfBytes = await pdfDoc.save()
 
 _This example produces [this PDF](assets/pdfs/examples/embed_pdf_pages.pdf)_ (when [this PDF](assets/pdfs/american_flag.pdf) is used for the `americanFlagPdfBytes` variable and [this PDF](assets/pdfs/us_constitution.pdf) is used for the `usConstitutionPdfBytes` variable).
 
-[Try the JSFiddle demo](https://jsfiddle.net/Hopding/Lyb16ocj/10/)
+[Try the JSFiddle demo](https://jsfiddle.net/Hopding/Lyb16ocj/13/)
 
 <!-- prettier-ignore -->
 ```js
@@ -372,7 +374,7 @@ import fontkit from '@pdf-lib/fontkit'
 
 // This should be a Uint8Array or ArrayBuffer
 // This data can be obtained in a number of different ways
-// If your running in a Node environment, you could use fs.readFile()
+// If you're running in a Node environment, you could use fs.readFile()
 // In the browser, you could make a fetch() call and use res.arrayBuffer()
 const fontBytes = ...
 
@@ -462,6 +464,49 @@ const pdfBytes = await pdfDoc.save()
 //   • Written to a file in Node
 //   • Downloaded from the browser
 //   • Rendered in an <iframe>
+```
+
+### Read Document Metadata
+
+[Try the JSFiddle demo](https://jsfiddle.net/Hopding/eg8rfz3k/16/)
+
+<!-- prettier-ignore -->
+```js
+import { PDFDocument } from 'pdf-lib'
+
+// This should be a Uint8Array or ArrayBuffer
+// This data can be obtained in a number of different ways
+// If your running in a Node environment, you could use fs.readFile()
+// In the browser, you could make a fetch() call and use res.arrayBuffer()
+const existingPdfBytes = ...
+
+// Load a PDFDocument without updating its existing metadata
+const pdfDoc = await PDFDocument.load(existingPdfBytes, { 
+  updateMetadata: false 
+})
+
+// Print all available metadata fields
+console.log('Title:', pdfDoc.getTitle())
+console.log('Author:', pdfDoc.getAuthor())
+console.log('Subject:', pdfDoc.getSubject())
+console.log('Creator:', pdfDoc.getCreator())
+console.log('Keywords:', pdfDoc.getKeywords())
+console.log('Producer:', pdfDoc.getProducer())
+console.log('Creation Date:', pdfDoc.getCreationDate())
+console.log('Modification Date:', pdfDoc.getModificationDate())
+```
+
+This script outputs the following (_when [this PDF](assets/pdfs/with_cropbox.pdf) is used for the `existingPdfBytes` variable_):
+
+```
+Title: Microsoft Word - Basic Curriculum Vitae example.doc
+Author: Administrator
+Subject: undefined
+Creator: PScript5.dll Version 5.2
+Keywords: undefined
+Producer: Acrobat Distiller 8.1.0 (Windows)
+Creation Date: 2010-07-29T14:26:00.000Z
+Modification Date: 2010-07-29T14:26:00.000Z
 ```
 
 ### Draw SVG Paths
@@ -581,12 +626,13 @@ yarn add @pdf-lib/fontkit
 
 To register the `fontkit` instance:
 
+<!-- prettier-ignore -->
 ```js
-import { PDFDocument } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+import { PDFDocument } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
 
-const pdfDoc = await PDFDocument.create();
-pdfDoc.registerFontkit(fontkit);
+const pdfDoc = await PDFDocument.create()
+pdfDoc.registerFontkit(fontkit)
 ```
 
 ### Fontkit UMD Module
@@ -605,9 +651,10 @@ The following builds are available:
 
 When using a UMD build, you will have access to a global `window.fontkit` variable. To register the `fontkit` instance:
 
+<!-- prettier-ignore -->
 ```js
-var pdfDoc = await PDFLib.PDFDocument.create();
-pdfDoc.registerFontkit(fontkit);
+var pdfDoc = await PDFLib.PDFDocument.create()
+pdfDoc.registerFontkit(fontkit)
 ```
 
 ## Documentation
@@ -813,7 +860,10 @@ We welcome contributions from the open source community! If you are interested i
 ## Tutorials and Cool Stuff
 
 - [Möbius Printing helper](https://shreevatsa.net/mobius-print/) - a tool created by @shreevatsa
+- [Extract PDF pages](https://shreevatsa.net/pdf-pages/) - a tool created by @shreevatsa
+- [Travel certificate generator](https://github.com/LAB-MI/deplacement-covid-19) - a tool that creates travel certificates for French citizens under quarantine due to COVID-19
 - [How to use pdf-lib in AWS Lambdas](https://medium.com/swlh/create-pdf-using-pdf-lib-on-serverless-aws-lambda-e9506246dc88) - a tutorial written by Crespo Wang
+- [Working With PDFs in Node.js Using pdf-lib](http://thecodebarbarian.com/working-with-pdfs-in-node-js.html) - a tutorial by Valeri Karpov
 
 ## Prior Art
 

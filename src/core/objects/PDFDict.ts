@@ -23,13 +23,13 @@ class PDFDict extends PDFObject {
 
   private readonly dict: DictMap;
 
-  protected constructor(map: Map<PDFName, PDFObject>, context: PDFContext) {
+  protected constructor(map: DictMap, context: PDFContext) {
     super();
     this.dict = map;
     this.context = context;
   }
 
-  entries(): Array<[PDFName, PDFObject]> {
+  entries(): [PDFName, PDFObject][] {
     return Array.from(this.dict.entries());
   }
 
@@ -81,6 +81,10 @@ class PDFDict extends PDFObject {
 
   delete(key: PDFName): boolean {
     return this.dict.delete(key);
+  }
+
+  asMap(): Map<PDFName, PDFObject> {
+    return new Map(this.dict);
   }
 
   clone(context?: PDFContext): PDFDict {
