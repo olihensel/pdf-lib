@@ -14,6 +14,9 @@ import {
   toHexStringOfMinLength,
 } from 'src/utils';
 
+import { RNGContext } from 'src/types/strings';
+import seedrandom from 'seedrandom';
+
 /**
  * A note of thanks to the developers of https://github.com/foliojs/pdfkit, as
  * this class borrows from:
@@ -38,6 +41,8 @@ class CustomFontEmbedder {
   protected baseFontName: string;
   protected glyphCache: Cache<Glyph[]>;
 
+  private readonly rngContext: RNGContext;
+
   protected constructor(font: Font, fontData: Uint8Array, customName?: string) {
     this.font = font;
     this.scale = 1000 / this.font.unitsPerEm;
@@ -47,6 +52,7 @@ class CustomFontEmbedder {
 
     this.baseFontName = '';
     this.glyphCache = Cache.populatedBy(this.allGlyphsInFontSortedById);
+    this.rngContext = { rng: seedrandom('deterministic-but-different') };
   }
 
   /**
@@ -89,7 +95,8 @@ class CustomFontEmbedder {
   }
 
   embedIntoContext(context: PDFContext, ref?: PDFRef): Promise<PDFRef> {
-    this.baseFontName = this.customName || addRandomSuffix(this.fontName);
+    this.baseFontName =
+      this.customName || addRandomSuffix(this.rngContext, this.fontName);
     return this.embedFontDict(context, ref);
   }
 

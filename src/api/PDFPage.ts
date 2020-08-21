@@ -612,7 +612,7 @@ export default class PDFPage {
     // TODO: Reuse image Font name if we've already added this image to Resources.Fonts
     assertIs(font, 'font', [[PDFFont, 'PDFFont']]);
     this.font = font;
-    this.fontKey = addRandomSuffix(this.font.name);
+    this.fontKey = addRandomSuffix(this.doc.rngContext, this.font.name);
     this.node.setFontDictionary(PDFName.of(this.fontKey), this.font.ref);
   }
 
@@ -972,7 +972,7 @@ export default class PDFPage {
     assertRangeOrUndefined(options.opacity, 'opacity.opacity', 0, 1);
     assertIsOneOfOrUndefined(options.blendMode, 'options.blendMode', BlendMode);
 
-    const xObjectKey = addRandomSuffix('Image', 10);
+    const xObjectKey = addRandomSuffix(this.doc.rngContext, 'Image', 10);
     this.node.setXObject(PDFName.of(xObjectKey), image.ref);
 
     const graphicsStateKey = this.maybeEmbedGraphicsState({
@@ -1047,7 +1047,11 @@ export default class PDFPage {
     assertRangeOrUndefined(options.opacity, 'opacity.opacity', 0, 1);
     assertIsOneOfOrUndefined(options.blendMode, 'options.blendMode', BlendMode);
 
-    const xObjectKey = addRandomSuffix('EmbeddedPdfPage', 10);
+    const xObjectKey = addRandomSuffix(
+      this.doc.rngContext,
+      'EmbeddedPdfPage',
+      10,
+    );
     this.node.setXObject(PDFName.of(xObjectKey), embeddedPage.ref);
 
     const graphicsStateKey = this.maybeEmbedGraphicsState({
@@ -1486,7 +1490,7 @@ export default class PDFPage {
       return undefined;
     }
 
-    const key = addRandomSuffix('GS', 10);
+    const key = addRandomSuffix(this.doc.rngContext, 'GS', 10);
 
     const graphicsState = this.doc.context.obj({
       Type: 'ExtGState',

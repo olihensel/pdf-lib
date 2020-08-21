@@ -1,3 +1,5 @@
+import { RNGContext } from 'src/types/strings';
+
 export const toCharCode = (character: string) => character.charCodeAt(0);
 
 export const toCodePoint = (character: string) => character.codePointAt(0);
@@ -31,8 +33,13 @@ export const copyStringIntoBuffer = (
   return length;
 };
 
-export const addRandomSuffix = (prefix: string, suffixLength = 4) =>
-  `${prefix}-${Math.floor(Math.random() * 10 ** suffixLength)}`;
+export const addRandomSuffix = (
+  rngContext: RNGContext,
+  prefix: string,
+  suffixLength = 4,
+) => {
+  return `${prefix}-${Math.floor(rngContext.rng() * 10 ** suffixLength)}`;
+};
 
 export const escapeRegExp = (str: string) =>
   str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

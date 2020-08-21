@@ -60,6 +60,8 @@ import {
 } from 'src/utils';
 import FileEmbedder from 'src/core/embedders/FileEmbedder';
 import PDFEmbeddedFile from 'src/api/PDFEmbeddedFile';
+import { RNGContext } from 'src/types/strings';
+import seedrandom from 'seedrandom';
 
 /**
  * Represents a PDF document.
@@ -181,6 +183,8 @@ export default class PDFDocument {
   private readonly embeddedPages: PDFEmbeddedPage[];
   private readonly embeddedFiles: PDFEmbeddedFile[];
 
+  public readonly rngContext: RNGContext;
+
   private constructor(
     context: PDFContext,
     ignoreEncryption: boolean,
@@ -203,6 +207,7 @@ export default class PDFDocument {
     if (!ignoreEncryption && this.isEncrypted) throw new EncryptedPDFError();
 
     if (updateMetadata) this.updateInfoDict();
+    this.rngContext = { rng: seedrandom('deterministic') };
   }
 
   /**
